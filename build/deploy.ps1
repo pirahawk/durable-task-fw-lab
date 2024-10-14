@@ -8,6 +8,8 @@ Param(
 Write-Output "Executing in $PSScriptRoot"
 Write-Output "Invoked with $randomizationGuid $azGroupName $azDeploymentName $userAdId"
 
+$(dotnet user-secrets init -p 'src/DurableTasksLab.Service/DurableTasksLab.Service.csproj')
+exit 0
 
 if($null -eq $(az group show -n $azGroupName)){
     $errorMessage = "Group $azGroupName does not exist, please create resource group and try again"
@@ -40,4 +42,6 @@ az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PS
     Write-Output "Created Az Service Bus Namespace: $azSbEndpoint"
     Write-Output "Created Az Service Bus Topic: $azSbTopic"
     Write-Output "Created Az Storage endpoint: $azStorageEndpoint"
+
+    $(dotnet user-secrets init -p 'src/DurableTasksLab.Service/DurableTasksLab.Service.csproj')
  }

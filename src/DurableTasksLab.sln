@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.Client", "DurableTasksLab.Client\DurableTasksLab.Client.csproj", "{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.Service", "DurableTasksLab.Service\DurableTasksLab.Service.csproj", "{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

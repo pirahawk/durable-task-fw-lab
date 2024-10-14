@@ -1,0 +1,6 @@
+@DurableTasksLab.Service_HostAddress = http://localhost:5168
+
+GET {{DurableTasksLab.Service_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
