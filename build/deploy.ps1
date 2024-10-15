@@ -24,10 +24,10 @@ Write-Output "Executing deployment $dependenciesDeploymentName"
 
 $userAdId = $(az ad signed-in-user show --query "id" -o tsv)
 
-az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PSScriptRoot\bicep\azDependencies.bicep `
- --parameters `
- randomSuffix="$randomizationGuid" `
- userPrincipalId="$userAdId"
+# az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PSScriptRoot\bicep\azDependencies.bicep `
+#  --parameters `
+#  randomSuffix="$randomizationGuid" `
+#  userPrincipalId="$userAdId"
 
 
  if($?){  # see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#section-1
@@ -50,6 +50,7 @@ az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PS
     #Service Secrets
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Topic' "$azSbTopic")
+    $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Subscription' "$azSbSubscription")
 
     #Client Secrets
     $(dotnet user-secrets -p $DurableTasksLabClientProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")
