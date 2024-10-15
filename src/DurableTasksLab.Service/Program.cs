@@ -1,4 +1,4 @@
-using DurableTasksLab.Common;
+using DurableTasksLab.Common.Subscriber;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<MyDurableTasksTopicSubscriberService>();
+builder.Services.AddSingleton<IDurableTasksMessageHandler, MyDurableTasksMessageHandler>();
 
 var app = builder.Build();
 

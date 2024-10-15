@@ -5,17 +5,19 @@ using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace DurableTasksLab.Common;
+namespace DurableTasksLab.Common.Subscriber;
 
 public class MyDurableTasksTopicSubscriberService : BackgroundService
 {
     private readonly IConfiguration configuration;
+    private readonly IDurableTasksMessageHandler durableTasksMessageHandler;
     private ServiceBusClient? client;
     private ServiceBusProcessor? processor;
 
-    public MyDurableTasksTopicSubscriberService(IConfiguration configuration)
+    public MyDurableTasksTopicSubscriberService(IConfiguration configuration, IDurableTasksMessageHandler durableTasksMessageHandler)
     {
         this.configuration = configuration;
+        this.durableTasksMessageHandler = durableTasksMessageHandler;
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -58,6 +60,10 @@ public class MyDurableTasksTopicSubscriberService : BackgroundService
             {
                 // deserialize the message body into a CloudEvent
                 CloudEvent? receivedCloudEvent = CloudEvent.Parse(receivedMessage.Body);
+                if(receivedCloudEvent != null){
+                    await this.durableTasksMessageHandler.HandleMessage(receivedCloudEvent);
+                }
+                //receivedCloudEvent.Data.ToObjectFromJson
             }
 
             await args.CompleteMessageAsync(receivedMessage);

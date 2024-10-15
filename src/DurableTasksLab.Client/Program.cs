@@ -5,6 +5,7 @@ using System.Text.Json;
 using Azure.Identity;
 using Azure.Messaging;
 using Azure.Messaging.ServiceBus;
+using DurableTasksLab.Common.Messaging;
 using Microsoft.Extensions.Configuration;
 
 var configuration = new ConfigurationBuilder()
@@ -22,13 +23,12 @@ var contentType = "application/json";
 
 // For samples on using the CloudEvent schema refer to: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Azure.Messaging.ServiceBus/samples/Sample11_CloudEvents.md
 
-dynamic cloudEventPayload = new {
+var cloudEventPayload = new SimpleOrchestrationMessage{
     Id = invokeOperationId,
     Message = "Sample Message"
 };
-var cloudEvent = new CloudEvent("durabletask-client", "test-durabletask-invoke", cloudEventPayload);
+var cloudEvent = new CloudEvent(source: "durabletask-client", type: DurableTasksMessagingTypeConstants.SimpleOrchestrationMessage, cloudEventPayload);
 cloudEvent.Subject = $"operation-{invokeOperationId}";
-
 cloudEvent.ExtensionAttributes.Add("contenttype", contentType);
 
 // create a message that we can send. UTF-8 encoding is used when providing a string.
