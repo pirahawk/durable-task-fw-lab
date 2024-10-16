@@ -1,6 +1,7 @@
 using DurableTask.AzureStorage;
 using DurableTask.Core;
 using DurableTasksLab.Common.DTfx;
+using DurableTasksLab.Common.DTfx.Orchestrations.Simple;
 using DurableTasksLab.Common.Subscriber;
 using Microsoft;
 
@@ -11,7 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<MyDurableTasksTopicSubscriberService>();
+builder.Services.AddHostedService<MyDurableTasksWorkerService>();
 builder.Services.AddSingleton<IDurableTasksMessageHandler, MyDurableTasksMessageHandler>();
+builder.Services.AddTransient<SimpleTaskOne>();
 
 builder.Services.AddTransient<AzureStorageOrchestrationService>((serviceProvider) =>{ 
     var configuration = serviceProvider.GetService<IConfiguration>();
@@ -25,6 +28,12 @@ builder.Services.AddTransient<TaskHubClient>((serviceProvider)=>{
     var storageOrchestrationService = serviceProvider.GetService<AzureStorageOrchestrationService>();
     Assumes.NotNull(storageOrchestrationService);
     return DurableTaskFactory.CreateTaskHubClient(storageOrchestrationService);
+});
+
+builder.Services.AddTransient<TaskHubWorker>((serviceProvider)=>{
+    var storageOrchestrationService = serviceProvider.GetService<AzureStorageOrchestrationService>();
+    Assumes.NotNull(storageOrchestrationService);
+    return DurableTaskFactory.CreateTaskHubWorker(storageOrchestrationService);
 });
 
 var app = builder.Build();

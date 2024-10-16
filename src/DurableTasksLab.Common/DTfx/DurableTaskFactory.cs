@@ -30,4 +30,10 @@ public static class DurableTaskFactory
         var taskHubClient = new TaskHubClient(storageOrchestrationService);
         return taskHubClient;
     }
+
+    public static TaskHubWorker CreateTaskHubWorker(AzureStorageOrchestrationService storageOrchestrationService)
+    {
+        var taskHubWorker = new TaskHubWorker(storageOrchestrationService);
+        return taskHubWorker;
+    }
 }

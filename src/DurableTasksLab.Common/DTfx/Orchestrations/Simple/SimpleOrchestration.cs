@@ -14,13 +14,3 @@ public class SimpleOrchestration : TaskOrchestration<DTfxResult, SimpleOrchestra
         };
     }
 }
-
-public class SimpleTaskOne : TaskActivity<SimpleOrchestrationMessage, string>
-{
-    protected override string Execute(TaskContext context, SimpleOrchestrationMessage input)
-    {
-        var returnMessage = $"Executing Task: {nameof(SimpleTaskOne)} - ID: {input.Id} Message: {input.Message}";
-        Console.WriteLine(returnMessage);
-        return returnMessage;
-    }
-}
