@@ -34,7 +34,7 @@ Run the [deploy.ps1](./build/deploy.ps1) script like so:
 $randomSuffix = "<your-random-suffix>"
 $azGroupName = "<target-azure-resource-group>"
 
-.$PSScriptRoot/build/deploy.ps1 `
+./build/deploy.ps1 `
 -randomSuffix $randomSuffix `
 -azGroupName $azGroupName
 ```
