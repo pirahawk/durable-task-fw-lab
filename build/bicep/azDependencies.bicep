@@ -1,7 +1,6 @@
 param randomSuffix string
 param userPrincipalId string
 
-
 resource servicebusNameSpace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
   name: 'servicebusns${randomSuffix}'
   location: resourceGroup().location
@@ -44,7 +43,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   kind: 'StorageV2'
 }
 
-
 resource ServiceBusContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 }
@@ -56,8 +54,6 @@ resource ServiceBusSenderRole 'Microsoft.Authorization/roleDefinitions@2022-04-0
 resource ServiceBusReceiverRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '4f6d3b9b-027b-4f4c-9142-0e5a2a2247e0'
 }
-
-//b24988ac-6180-42a0-ab88-20f7382dd24c
 
 resource ContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'

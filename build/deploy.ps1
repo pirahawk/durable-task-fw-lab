@@ -1,12 +1,12 @@
 Param(
   [parameter(Mandatory=$true)]
-  [string] $randomizationGuid,
+  [string] $randomSuffix,
   [parameter(Mandatory=$true)]
   [string] $azGroupName
 )
 
 Write-Output "Executing in $PSScriptRoot"
-Write-Output "Invoked with $randomizationGuid $azGroupName $azDeploymentName $userAdId"
+Write-Output "Invoked with $randomSuffix $azGroupName $azDeploymentName $userAdId"
 
 if($null -eq $(az group show -n $azGroupName)){
     $errorMessage = "Group $azGroupName does not exist, please create resource group and try again"
@@ -26,18 +26,18 @@ $userAdId = $(az ad signed-in-user show --query "id" -o tsv)
 
 az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PSScriptRoot\bicep\azDependencies.bicep `
  --parameters `
- randomSuffix="$randomizationGuid" `
+ randomSuffix="$randomSuffix" `
  userPrincipalId="$userAdId"
 
 
  if($?){  # see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#section-1
     Write-Output "deployment $dependenciesDeploymentName success"
-    $azSbNamespaceName = $(az servicebus namespace show -g $azGroupName -n "servicebusns$randomizationGuid" --query "name" -o tsv)
-    $azSbEndpoint = $(az servicebus namespace show -g $azGroupName -n "servicebusns$randomizationGuid" --query "serviceBusEndpoint" -o tsv)
-    $azSbTopic = $(az servicebus topic show -g $azGroupName -n durabletaskstopic --namespace-name "servicebusns$randomizationGuid" --query "name" -o tsv)
-    $azSbSubscription = $(az servicebus topic subscription show -g $azGroupName -n defaultmessagesub --topic-name durabletaskstopic --namespace-name "servicebusns$randomizationGuid" --query "name" -o tsv)
-    $azStorageEndpoint = $(az storage account show -g $azGroupName -n "dtstorage$randomizationGuid" --query "primaryEndpoints.blob" -o tsv)
-    $azStorageEndpoinConnectionString = $(az storage account show-connection-string -g $azGroupName -n "dtstorage$randomizationGuid" --query "connectionString" -o tsv)
+    $azSbNamespaceName = $(az servicebus namespace show -g $azGroupName -n "servicebusns$randomSuffix" --query "name" -o tsv)
+    $azSbEndpoint = $(az servicebus namespace show -g $azGroupName -n "servicebusns$randomSuffix" --query "serviceBusEndpoint" -o tsv)
+    $azSbTopic = $(az servicebus topic show -g $azGroupName -n durabletaskstopic --namespace-name "servicebusns$randomSuffix" --query "name" -o tsv)
+    $azSbSubscription = $(az servicebus topic subscription show -g $azGroupName -n defaultmessagesub --topic-name durabletaskstopic --namespace-name "servicebusns$randomSuffix" --query "name" -o tsv)
+    $azStorageEndpoint = $(az storage account show -g $azGroupName -n "dtstorage$randomSuffix" --query "primaryEndpoints.blob" -o tsv)
+    $azStorageEndpoinConnectionString = $(az storage account show-connection-string -g $azGroupName -n "dtstorage$randomSuffix" --query "connectionString" -o tsv)
     
     Write-Output "Created Az Service Bus Namespace: $azSbEndpoint"
     Write-Output "Created Az Service Bus Topic: $azSbTopic"
