@@ -24,10 +24,10 @@ Write-Output "Executing deployment $dependenciesDeploymentName"
 
 $userAdId = $(az ad signed-in-user show --query "id" -o tsv)
 
-# az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PSScriptRoot\bicep\azDependencies.bicep `
-#  --parameters `
-#  randomSuffix="$randomizationGuid" `
-#  userPrincipalId="$userAdId"
+az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PSScriptRoot\bicep\azDependencies.bicep `
+ --parameters `
+ randomSuffix="$randomizationGuid" `
+ userPrincipalId="$userAdId"
 
 
  if($?){  # see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#section-1
@@ -37,6 +37,7 @@ $userAdId = $(az ad signed-in-user show --query "id" -o tsv)
     $azSbTopic = $(az servicebus topic show -g $azGroupName -n durabletaskstopic --namespace-name "servicebusns$randomizationGuid" --query "name" -o tsv)
     $azSbSubscription = $(az servicebus topic subscription show -g $azGroupName -n defaultmessagesub --topic-name durabletaskstopic --namespace-name "servicebusns$randomizationGuid" --query "name" -o tsv)
     $azStorageEndpoint = $(az storage account show -g $azGroupName -n "dtstorage$randomizationGuid" --query "primaryEndpoints.blob" -o tsv)
+    $azStorageEndpoinConnectionString = $(az storage account show-connection-string -g $azGroupName -n "dtstorage$randomizationGuid" --query "connectionString" -o tsv)
     
     Write-Output "Created Az Service Bus Namespace: $azSbEndpoint"
     Write-Output "Created Az Service Bus Topic: $azSbTopic"
@@ -51,6 +52,8 @@ $userAdId = $(az ad signed-in-user show --query "id" -o tsv)
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Topic' "$azSbTopic")
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ServiceBus:Subscription' "$azSbSubscription")
+    $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'Storage:Connection' "$azStorageEndpoinConnectionString")
+    $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'DurableTasks:taskHubName' "MyDTFXHub")
 
     #Client Secrets
     $(dotnet user-secrets -p $DurableTasksLabClientProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")

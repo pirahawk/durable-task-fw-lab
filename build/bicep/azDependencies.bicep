@@ -57,6 +57,12 @@ resource ServiceBusReceiverRole 'Microsoft.Authorization/roleDefinitions@2022-04
   name: '4f6d3b9b-027b-4f4c-9142-0e5a2a2247e0'
 }
 
+//b24988ac-6180-42a0-ab88-20f7382dd24c
+
+resource ContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+}
+
 resource sbContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
   name: guid(servicebusNameSpace.id, userPrincipalId, ServiceBusContributorRole.name)
   scope: servicebusNameSpace
@@ -89,3 +95,16 @@ resource sbReceiverAssignment 'Microsoft.Authorization/roleAssignments@2022-04-0
     description: 'ServiceBusReceiverRole'
   }
 }
+
+resource storageContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
+  name: guid(storageAccount.id, userPrincipalId, ContributorRole.name)
+  scope: storageAccount
+  properties:{
+    principalId: userPrincipalId
+    roleDefinitionId: ContributorRole.id
+    principalType: 'User'
+    description: 'StorageContributorRole'
+  }
+}
+
+
