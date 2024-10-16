@@ -16,13 +16,13 @@ The lab requires the following dependencies to be installed:
 
 ### Deploy Azure Resources
 
-The lab will build and run against deployed Azure Resources. Please bein by creating a target [Azure Resource Group](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create) like so:
+The lab will build and run against deployed Azure Resources. Please begin by creating a target [Azure Resource Group](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create) like so:
 
 ```azurecli
 az group create -l uksouth -n <target-azure-resource-group>
 ```
 
-Once the resource group has been created, you will need to run the [deploy.ps1](./build/deploy.ps1) script. The script expexts the following paramters:
+Once the resource group has been created, you will need to run the [deploy.ps1](./build/deploy.ps1) script. The script expects the following paramters:
 
 * `azGroupName` - which should match the `<target-azure-resource-group>` parameter from the previous step.
 * `randomSuffix` - a small random suffix of your choice, which will get appended to Azure resources created (in an effort to avoid any Azure Host Name collisions when deployed).
