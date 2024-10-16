@@ -18,30 +18,40 @@ await using ServiceBusClient client = new(sbNamespace, new DefaultAzureCredentia
 
 ServiceBusSender sender = client.CreateSender(topicName);
 
+// For samples on using the CloudEvent schema refer to: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Azure.Messaging.ServiceBus/samples/Sample11_CloudEvents.md
+var source = "DurableTasksLab.Client";
 var invokeOperationId = Guid.NewGuid();
 var contentType = "application/json";
 
-// For samples on using the CloudEvent schema refer to: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Azure.Messaging.ServiceBus/samples/Sample11_CloudEvents.md
-
-var cloudEventPayload = new SimpleOrchestrationMessage{
-    Id = invokeOperationId,
-    Message = "Sample Message"
-};
-var cloudEvent = new CloudEvent(source: "durabletask-client", type: DurableTasksMessagingTypeConstants.SimpleOrchestrationMessage, cloudEventPayload);
-cloudEvent.Subject = $"operation-{invokeOperationId}";
-cloudEvent.ExtensionAttributes.Add("contenttype", contentType);
-
-// create a message that we can send. UTF-8 encoding is used when providing a string.
-ServiceBusMessage message = new(JsonSerializer.Serialize(cloudEvent)){
-    ContentType = contentType,
-    MessageId = $"{invokeOperationId}",
-    Subject = cloudEvent.Subject
-};
-
-// send the message
-await sender.SendMessageAsync(message);
+await SendSimpleOrchestrationMessageAsync();
 
 Console.WriteLine($"Sent messages to: {configuration["ServiceBus:Namespace"]}");
 
+async Task SendSimpleOrchestrationMessageAsync()
+{
+    var cloudEventPayload = new SimpleOrchestrationMessage
+    {
+        Id = invokeOperationId,
+        Message = "Sample Message"
+    };
 
+    var cloudEvent = new CloudEvent(source: source, type: DurableTasksMessagingTypeConstants.SimpleOrchestrationMessage, cloudEventPayload);
+    cloudEvent.Subject = $"{DurableTasksMessagingTypeConstants.SimpleOrchestrationMessage}-{invokeOperationId}";
+    cloudEvent.ExtensionAttributes.Add("contenttype", contentType);
 
+    await SendServiceBusTopicMessageAsync(cloudEvent);
+}
+
+async Task SendServiceBusTopicMessageAsync(CloudEvent cloudEvent)
+{
+    // create a message that we can send. UTF-8 encoding is used when providing a string.
+    ServiceBusMessage message = new(JsonSerializer.Serialize(cloudEvent))
+    {
+        ContentType = contentType,
+        MessageId = $"{invokeOperationId}-{Guid.NewGuid()}",
+        Subject = cloudEvent.Subject
+    };
+
+    // send the message
+    await sender.SendMessageAsync(message);
+}
