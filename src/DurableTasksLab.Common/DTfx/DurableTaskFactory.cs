@@ -31,9 +31,16 @@ public static class DurableTaskFactory
         return taskHubClient;
     }
 
-    public static TaskHubWorker CreateTaskHubWorker(AzureStorageOrchestrationService storageOrchestrationService)
+    public static TaskHubWorker CreateTaskHubWorker(
+        AzureStorageOrchestrationService storageOrchestrationService, 
+        Core.HostBuildingNameVersionObjectManager<TaskOrchestration> orchestrationObjectManager,
+        Core.HostBuildingNameVersionObjectManager<TaskActivity> activityObjectManager)
     {
-        var taskHubWorker = new TaskHubWorker(storageOrchestrationService);
+        var taskHubWorker = new TaskHubWorker(
+            storageOrchestrationService,
+            orchestrationObjectManager,
+            activityObjectManager
+        );
         return taskHubWorker;
     }
 }

@@ -9,16 +9,13 @@ public class MyDurableTasksWorkerService : BackgroundService
 {
     private readonly IConfiguration configuration;
     private readonly TaskHubWorker taskHubWorker;
-    private readonly SimpleTaskOne simpleTaskOne;
 
     public MyDurableTasksWorkerService(
         IConfiguration configuration, 
-        TaskHubWorker taskHubWorker, 
-        SimpleTaskOne simpleTaskOne)
+        TaskHubWorker taskHubWorker)
     {
         this.configuration = configuration;
         this.taskHubWorker = taskHubWorker;
-        this.simpleTaskOne = simpleTaskOne;
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -36,8 +33,7 @@ public class MyDurableTasksWorkerService : BackgroundService
 
     private void ConfigureWorkerActivites(TaskHubWorker taskHubWorker)
     {
-        taskHubWorker.AddTaskActivities(this.simpleTaskOne);
-        
+        taskHubWorker.AddTaskActivities(typeof(SimpleTaskOne));        
     }
 }
 
