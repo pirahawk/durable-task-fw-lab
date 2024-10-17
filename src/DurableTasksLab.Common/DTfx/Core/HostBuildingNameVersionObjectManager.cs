@@ -6,7 +6,7 @@ namespace DurableTasksLab.Common.DTfx.Core;
 
 public class HostBuildingNameVersionObjectManager<T> : INameVersionObjectManager<T> where T : class
 {
-    readonly IDictionary<string, HostBuildingObjectCreator<T>> creators;
+    readonly IDictionary<string, ObjectCreator<T>> creators;
     readonly object thisLock = new object();
     private readonly IServiceProvider serviceProvider;
     private readonly ILogger<HostBuildingNameVersionObjectManager<T>> logger;
@@ -15,22 +15,27 @@ public class HostBuildingNameVersionObjectManager<T> : INameVersionObjectManager
     {
         this.serviceProvider = serviceProvider;
         this.logger = logger;
-        creators = new Dictionary<string, HostBuildingObjectCreator<T>>();
+        creators = new Dictionary<string, ObjectCreator<T>>();
     }
 
     public void Add(ObjectCreator<T> creator)
     {
         lock (this.thisLock)
         {
-            string key = GetKey(creator.Name, creator.Version);
+            string key = creator is IHostBuildingObjectCreator ? ((IHostBuildingObjectCreator)creator).Key : GetKey(creator.Name, creator.Version);
 
             if (this.creators.ContainsKey(key))
             {
-                throw new InvalidOperationException("Duplicate entry detected: " + creator.Name + " " +
-                                                    creator.Version);
+                throw new InvalidOperationException($"Duplicate entry detected: Key: {key} Name:{creator.Name} Version: {creator.Version}");
             }
 
-            var hostObjectCreator = new HostBuildingObjectCreator<T>(this.serviceProvider, creator);
+            if (creator is IHostBuildingObjectCreator)
+            {
+                this.creators.Add(key, creator);
+                return;
+            }
+
+            var hostObjectCreator = new WrappingHostBuildingObjectCreator<T>(this.serviceProvider, creator);
             this.creators.Add(key, hostObjectCreator);
         }
     }
@@ -41,7 +46,7 @@ public class HostBuildingNameVersionObjectManager<T> : INameVersionObjectManager
 
             lock (this.thisLock)
             {
-                if (this.creators.TryGetValue(key, out HostBuildingObjectCreator<T>? creator))
+                if (this.creators.TryGetValue(key, out ObjectCreator<T>? creator))
                 {
                     Assumes.NotNull(creator);
                     return creator.Create();

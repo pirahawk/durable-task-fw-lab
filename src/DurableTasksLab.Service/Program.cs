@@ -43,14 +43,22 @@ builder.Services.AddTransient<TaskHubWorker>((serviceProvider) =>
     Assumes.NotNull(orchestrationObjectManager);
     Assumes.NotNull(activityObjectManager);
 
-    return DurableTaskFactory.CreateTaskHubWorker(storageOrchestrationService, orchestrationObjectManager, activityObjectManager);
+    var hub = DurableTaskFactory.CreateTaskHubWorker(storageOrchestrationService, orchestrationObjectManager, activityObjectManager);
+    var allDTFxRegistrations = serviceProvider.GetServices<IHostBuildingObjectCreator>();
+
+    foreach (var registration in allDTFxRegistrations)
+    {
+        registration.Register(hub);
+    }
+
+    return hub;
 });
 
 builder.Services.AddHostBuildingNameVersionObjectManager<TaskOrchestration>();
 builder.Services.AddHostBuildingNameVersionObjectManager<TaskActivity>();
 
-builder.Services.AddTransient<SimpleTaskOne>();
-builder.Services.AddTransient<SimpleOrchestration>();
+builder.Services.AddActivity<SimpleTaskOne>();
+builder.Services.AddOrchestration<SimpleOrchestration>();
 
 var app = builder.Build();
 
@@ -88,17 +96,4 @@ app.Run();
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-
-public static class HostBuilderExtensions
-{
-    public static void AddHostBuildingNameVersionObjectManager<T>(this IServiceCollection serviceCollection) where T:class
-    {
-        serviceCollection.AddTransient<HostBuildingNameVersionObjectManager<T>>((serviceProvider) =>
-        {
-            var logger = serviceProvider.GetService<ILogger<HostBuildingNameVersionObjectManager<T>>>();
-            Assumes.NotNull(logger);
-            return new HostBuildingNameVersionObjectManager<T>(serviceProvider, logger);
-        });
-    }
 }
