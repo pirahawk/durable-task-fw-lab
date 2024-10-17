@@ -18,9 +18,7 @@ public class SimpleOrchestration : TaskOrchestration<DTfxResult, SimpleOrchestra
     public override async Task<DTfxResult> RunTask(OrchestrationContext context, SimpleOrchestrationMessage input)
     {
         var returnMessage = $"Executing Orchestration: {nameof(SimpleOrchestration)} - ID: {input.Id} Message: {input.Message}";
-        //Console.WriteLine(returnMessage);
         this.logger?.LogInformation(returnMessage);
-
         var taskOneMessage = await context.ScheduleTask<string>(typeof(SimpleTaskOne), input);
         return new DTfxResult{
             Success = true,
