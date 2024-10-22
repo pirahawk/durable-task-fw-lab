@@ -8,9 +8,7 @@ public class SimpleTaskOne : TaskActivity<SimpleOrchestrationMessage, string>
 {
     private readonly ILogger<SimpleTaskOne>? logger;
 
-    public SimpleTaskOne():base(){}
-
-    public SimpleTaskOne(ILogger<SimpleTaskOne> logger):this()
+    public SimpleTaskOne(ILogger<SimpleTaskOne> logger)
     {
         this.logger = logger;
     }

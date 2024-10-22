@@ -43,6 +43,30 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   kind: 'StorageV2'
 }
 
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+  name: 'logs${randomSuffix}'
+  location: resourceGroup().location
+  properties: any({
+    retentionInDays: 30
+    features: {
+      searchVersion: 1
+    }
+    sku: {
+      name: 'PerGB2018'
+    }
+  })
+}
+
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: 'ai${randomSuffix}'
+  location: resourceGroup().location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: logAnalyticsWorkspace.id
+  }
+}
+
 resource ServiceBusContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 }

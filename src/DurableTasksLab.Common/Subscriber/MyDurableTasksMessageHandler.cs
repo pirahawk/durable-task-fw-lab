@@ -3,16 +3,19 @@ using DurableTask.Core;
 using DurableTasksLab.Common.DTfx.Orchestrations.Simple;
 using DurableTasksLab.Common.Messaging;
 using Microsoft;
+using Microsoft.Extensions.Logging;
 
 namespace DurableTasksLab.Common.Subscriber;
 
 public class MyDurableTasksMessageHandler : IDurableTasksMessageHandler
 {
     private readonly TaskHubClient taskHubClient;
+    private readonly ILogger<MyDurableTasksMessageHandler> logger;
 
-    public MyDurableTasksMessageHandler(TaskHubClient taskHubClient)
+    public MyDurableTasksMessageHandler(TaskHubClient taskHubClient, ILogger<MyDurableTasksMessageHandler> logger)
     {
         this.taskHubClient = taskHubClient;
+        this.logger = logger;
     }
     public async Task HandleMessage(CloudEvent cloudEventMessage)
     {
@@ -35,11 +38,11 @@ public class MyDurableTasksMessageHandler : IDurableTasksMessageHandler
         Assumes.NotNull(messageData);
 
         OrchestrationInstance orchestrationInstance = await this.taskHubClient.CreateOrchestrationInstanceAsync(
-            typeof(SimpleOrchestration), 
-            messageData.Id.ToString(), 
+            typeof(SimpleOrchestration),
+            messageData.Id.ToString(),
             messageData);
 
-         Console.WriteLine("Workflow Instance Started: " + orchestrationInstance);
+        this.logger.LogInformation($"Workflow Instance Started: {orchestrationInstance}");
     }
 }
 
