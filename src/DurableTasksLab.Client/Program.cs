@@ -23,7 +23,7 @@ var source = "DurableTasksLab.Client";
 
 var contentType = "application/json";
 
-for (int i = 0; i< 1000; i++){
+for (int i = 0; i< 100; i++){
     var invokeOperationId = Guid.NewGuid();
     await SendSimpleOrchestrationMessageAsync(invokeOperationId);
 }

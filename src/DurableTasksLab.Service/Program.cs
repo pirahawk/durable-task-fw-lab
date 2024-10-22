@@ -59,6 +59,7 @@ builder.Services.AddHostBuildingNameVersionObjectManager<TaskOrchestration>();
 builder.Services.AddHostBuildingNameVersionObjectManager<TaskActivity>();
 
 builder.Services.AddActivity<SimpleTaskOne>();
+builder.Services.AddActivity<TrackPerformanceTask>();
 builder.Services.AddOrchestration<SimpleOrchestration>();
 
 builder.Services.AddApplicationInsightsTelemetry();

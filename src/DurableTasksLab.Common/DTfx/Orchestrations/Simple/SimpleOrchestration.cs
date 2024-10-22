@@ -21,19 +21,27 @@ public class SimpleOrchestration : TaskOrchestration<DTfxResult, SimpleOrchestra
         //https://learn.microsoft.com/en-us/azure/azure-monitor/app/get-metric
         //this.telemetryClient.GetMetric("SimpleOrchestration").TrackValue(1);
         
-        this.telemetryClient.TrackMetric("SimpleOrchestration-Start", 1);
+        // this.telemetryClient.TrackMetric("SimpleOrchestration-Start", 1);
 
-        var startMessage = $"Executing Orchestration: {nameof(SimpleOrchestration)} - ID: {input.Id} Message: {input.Message}";
+        var currentTime = context.CurrentUtcDateTime;
+
+        var startMessage = $"Executing Orchestration: {nameof(SimpleOrchestration)} - ID: {input.Id} Message: {input.Message} IsReplaying: {context.IsReplaying}";
         this.logger?.LogInformation(startMessage);
         
-        var taskOneMessage = await context.ScheduleTask<string>(typeof(SimpleTaskOne), input);
+        //var taskResponseMessage = await context.ScheduleTask<string>(typeof(SimpleTaskOne), input);
 
-        var returnMessage = $"Finished Executing Orchestration: {nameof(SimpleOrchestration)} - ID: {input.Id} Message: {input.Message}";
+        var taskInput = new OrchestrationTelemetryInformation{
+            OrchestrationInstanceId = context.OrchestrationInstance.InstanceId,
+            OrchestrationStartTimeUTC = currentTime,
+        };
+        var taskResponseMessage = await context.ScheduleTask<string>(typeof(TrackPerformanceTask), taskInput);
+
+        var returnMessage = $"Finished Executing Orchestration: {nameof(SimpleOrchestration)} - ID: {input.Id} Message: {input.Message} IsReplaying: {context.IsReplaying}";
         this.logger?.LogInformation(returnMessage);
 
         return new DTfxResult{
             Success = true,
-            Message = taskOneMessage            
+            Message = taskResponseMessage            
         };
     }
 }
