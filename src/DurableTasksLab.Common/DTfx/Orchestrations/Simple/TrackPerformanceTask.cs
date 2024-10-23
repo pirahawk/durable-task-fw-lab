@@ -19,11 +19,12 @@ public class TrackPerformanceTask : TaskActivity<OrchestrationTelemetryInformati
     protected override string Execute(TaskContext context, OrchestrationTelemetryInformation input)
     {
         var orchestrationInstance = context.OrchestrationInstance.InstanceId;
-
-        this.telemetryClient.TrackMetric("start-orchestration", 1, new Dictionary<string,string>{
+        var unixTime = ((DateTimeOffset)input.OrchestrationStartTimeUTC).ToUnixTimeSeconds();
+        this.telemetryClient.TrackMetric($"orchestration-{orchestrationInstance}", 1, new Dictionary<string,string>{
             {"OrchestrationInstanceId", orchestrationInstance},
             {"OrchestrationExecutionId", context.OrchestrationInstance.ExecutionId},
-            {"OrchestrationStartTime", $"{input.OrchestrationStartTimeUTC}"}
+            {"OrchestrationStartTime", $"{input.OrchestrationStartTimeUTC}"},
+            {"OrchestrationStartTimeTicks", $"{unixTime}"}
         });
         var returnMessage = $"Executing Task: {nameof(SimpleTaskOne)} - ID: {context.OrchestrationInstance.InstanceId} ExecutionId: {context.OrchestrationInstance.ExecutionId} OrchestrationStartTime:{input.OrchestrationStartTimeUTC}";
         this.logger?.LogInformation(returnMessage);

@@ -45,8 +45,10 @@ az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PS
     Write-Output "Created Az Storage endpoint: $azStorageEndpoint"
 
     $DurableTasksLabServiceProjectPath = 'src/DurableTasksLab.Service/DurableTasksLab.Service.csproj'
+    $DurableTasksLabListenerServiceProjectPath = 'src/DurableTasksLab.ListenerService/DurableTasksLab.ListenerService.csproj'
     $DurableTasksLabClientProjectPath = 'src/DurableTasksLab.Client/DurableTasksLab.Client.csproj'
     $(dotnet user-secrets init -p $DurableTasksLabServiceProjectPath)
+    $(dotnet user-secrets init -p $DurableTasksLabListenerServiceProjectPath)
     $(dotnet user-secrets init -p $DurableTasksLabClientProjectPath)
 
     #Service Secrets
@@ -56,6 +58,14 @@ az deployment group create -g $azGroupName -n $dependenciesDeploymentName -f $PS
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'Storage:Connection' "$azStorageEndpoinConnectionString")
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'DurableTasks:taskHubName' "MyDTFXHub")
     $(dotnet user-secrets -p $DurableTasksLabServiceProjectPath set 'ApplicationInsights:ConnectionString' "$appInsightsConnectionString")
+
+    #Listener Secrets
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'ServiceBus:Topic' "$azSbTopic")
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'ServiceBus:Subscription' "$azSbSubscription")
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'Storage:Connection' "$azStorageEndpoinConnectionString")
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'DurableTasks:taskHubName' "MyDTFXHub")
+    $(dotnet user-secrets -p $DurableTasksLabListenerServiceProjectPath set 'ApplicationInsights:ConnectionString' "$appInsightsConnectionString")
 
     #Client Secrets
     $(dotnet user-secrets -p $DurableTasksLabClientProjectPath set 'ServiceBus:Namespace' "$azSbNamespaceName.servicebus.windows.net")

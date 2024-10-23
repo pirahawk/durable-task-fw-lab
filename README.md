@@ -66,6 +66,36 @@ To Run the solution locally:
 1. Run the [DurableTasksLab.Service](./src/DurableTasksLab.Service/DurableTasksLab.Service.csproj) to bring up the hosting for the durable tasks.
 1. Invoke the [DurableTasksLab.Client](./src/DurableTasksLab.Client/DurableTasksLab.Client.csproj) - This will send a message to the target `Azure Service Bus Topic` which will in turn invoke the target orchestration on the Service Host. 
 
+## App Insights Queries
+
+For all `orchestration` Custom metrics use the following query:
+
+```
+ let targetorchestration = 'orchestrationsummary';
+customMetrics
+| where name startswith targetorchestration
+| extend OrchestrationInstanceId = tostring(customDimensions['OrchestrationInstanceId']) 
+| extend OrchestrationExecutionId = tostring(customDimensions['OrchestrationExecutionId']) 
+| extend OrchestrationState = tostring(customDimensions['OrchestrationState']) 
+| extend OrchestrationCreatedTime = unixtime_seconds_todatetime(toreal(tostring(customDimensions['OrchestrationCreatedTime'])))
+| extend OrchestrationCompletedTime = unixtime_seconds_todatetime(toreal(tostring(customDimensions['OrchestrationCompletedTime'])))
+| summarize num=count(true) by bin(OrchestrationCreatedTime, 1s)
+| render columnchart
+```
+
+For all `orchestrationsummary` Custom metrics use the following query:
+
+```
+ let targetorchestration = 'orchestrationsummary';
+customMetrics 
+| where name startswith targetorchestration
+| extend OrchestrationInstanceId = tostring(customDimensions['OrchestrationInstanceId']) 
+| extend OrchestrationExecutionId = tostring(customDimensions['OrchestrationExecutionId']) 
+| extend OrchestrationState = tostring(customDimensions['OrchestrationState']) 
+| extend OrchestrationCreatedTime = unixtime_seconds_todatetime(toreal(tostring(customDimensions['OrchestrationCreatedTime'])))
+| extend OrchestrationCreatedTime = unixtime_seconds_todatetime(toreal(tostring(customDimensions['OrchestrationCompletedTime'])))
+```
+
 ## Useful links
 * https://github.com/Azure/durabletask/wiki/Core-Concepts
 * https://github.com/Azure/durabletask

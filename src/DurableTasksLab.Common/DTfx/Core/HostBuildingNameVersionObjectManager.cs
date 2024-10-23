@@ -56,7 +56,7 @@ public class HostBuildingNameVersionObjectManager<T> : INameVersionObjectManager
             }
     }
 
-    string GetKey(string name, string version)
+    string GetKey(string name, string? version)
     {
         return name + "_" + version;
     }
