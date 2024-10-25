@@ -27,7 +27,7 @@ for (int i = 0; i< batchSize; i++){
 await sender.SendMessagesAsync(messageCollection);
 //await SendSummaryMessageAsync(batchId, batchSize);
 
-Console.WriteLine($"Sent messages to: {configuration["ServiceBus:Namespace"]}");
+Console.WriteLine($"Sent messages to: {configuration["ServiceBus:Namespace"]} for batch - {batchId}");
 
 async Task SendSimpleOrchestrationMessageAsync(Guid invokeOperationId, int sequence)
 {

@@ -83,6 +83,18 @@ resource ContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' ex
   name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 }
 
+resource StorageBlobContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+}
+
+resource StorageQueueContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+}
+
+resource StorageTableContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3'
+}
+
 resource sbContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
   name: guid(servicebusNameSpace.id, userPrincipalId, ServiceBusContributorRole.name)
   scope: servicebusNameSpace
@@ -127,4 +139,36 @@ resource storageContributorAssignment 'Microsoft.Authorization/roleAssignments@2
   }
 }
 
+resource storageBlobContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
+  name: guid(storageAccount.id, userPrincipalId, StorageBlobContributorRole.name)
+  scope: storageAccount
+  properties:{
+    principalId: userPrincipalId
+    roleDefinitionId: StorageBlobContributorRole.id
+    principalType: 'User'
+    description: 'StorageBlobContributorRole'
+  }
+}
+
+resource StorageQueueContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
+  name: guid(storageAccount.id, userPrincipalId, StorageQueueContributorRole.name)
+  scope: storageAccount
+  properties:{
+    principalId: userPrincipalId
+    roleDefinitionId: StorageQueueContributorRole.id
+    principalType: 'User'
+    description: 'StorageQueueContributorRole'
+  }
+}
+
+resource storageTableContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
+  name: guid(storageAccount.id, userPrincipalId, StorageTableContributorRole.name)
+  scope: storageAccount
+  properties:{
+    principalId: userPrincipalId
+    roleDefinitionId: StorageTableContributorRole.id
+    principalType: 'User'
+    description: 'StorageTableContributorRole'
+  }
+}
 

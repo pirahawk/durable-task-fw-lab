@@ -25,6 +25,17 @@ builder.Services.AddTransient<AzureStorageOrchestrationService>((serviceProvider
     return createTask.Result;
 });
 
+#if AllowTaskHubClient
+
+builder.Services.AddTransient<TaskHubClient>((serviceProvider) =>
+{
+    var storageOrchestrationService = serviceProvider.GetService<AzureStorageOrchestrationService>();
+    Assumes.NotNull(storageOrchestrationService);
+    return DurableTaskFactory.CreateTaskHubClient(storageOrchestrationService);
+});
+
+#endif
+
 builder.Services.AddTransient<TaskHubWorker>((serviceProvider) =>
 {
     var storageOrchestrationService = serviceProvider.GetService<AzureStorageOrchestrationService>();
