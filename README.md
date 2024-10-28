@@ -56,9 +56,11 @@ The [DurableTasksLab](./src/DurableTasksLab.sln) solution contains the following
 
 The premise behind the lab is that the `DurableTasksLab.ListenerService` and the `DurableTasksLab.Service`projects contain the hosting setup to be able to listen to messages sent to a target `Azure Service Bus Topic Subscription`, which will in turn invoke Durable Task Orchestrations as prescribed by the message (please see [IDurableTasksMessageHandler](./src/DurableTasksLab.Common/Subscriber/IDurableTasksMessageHandler.cs)).
 
-The `DurableTasksLab.ListenerService` will messages from the Azure Service bus Topic and invoke the DTFx orcehstrations to execute, followed by a messaging pipeline designed to monitor the status of the execution and report them to Azure App Insights.
+The `DurableTasksLab.ListenerService` will pull messages from the Azure Service bus Topic and invoke the DTFx orcehstrations to execute, followed by a messaging pipeline designed to monitor the status of the execution and report them to Azure App Insights.
 
-The `DurableTasksLab.Client` is a simple console application that will send messages to a target `Azure Service Bus Topic`. The client is currently designed to send a batch of messages onto the service bus topic queue, with each message in the batch given a Batch ID (guid) prefix followed by its index position (int) in the batch of generated messages in the format `<BATCH-ID-GUID>-<MESSAGE-BATCH-INDEX-INT>`. This message ID also forms the `InstanceId` of each invoked DTFx orchestration. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations.
+The `DurableTasksLab.Client` is a simple console application that will send messages to a target `Azure Service Bus Topic`. The client is currently designed to send a batch of messages onto the service bus topic queue, with each message in the batch given a Batch ID (guid) prefix followed by its index position (int) in the batch of generated messages in the format `<BATCH-ID-GUID>-<MESSAGE-BATCH-INDEX-INT>`. 
+
+This message ID also forms the `InstanceId` of each invoked DTFx orchestration. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations by the `DurableTasksLab.ListenerService`. Custom Event Telemetry logged to Azure App Insights will also display this information as part of its Custom Dimensions for each Telemetry item.
 
 The lab comes bundled with a simple [Orchestration and Activities](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
 
