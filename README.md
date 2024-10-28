@@ -50,23 +50,29 @@ Once the deployment is successful, the script will automatically configure all a
 The [DurableTasksLab](./src/DurableTasksLab.sln) solution contains the following primary projects:
 
 * [DurableTasksLab.Service](./src/DurableTasksLab.Service/DurableTasksLab.Service.csproj)
+* [DurableTasksLab.ListenerService](./src/DurableTasksLab.ListenerService/DurableTasksLab.ListenerService.csproj)
 * [DurableTasksLab.Client](./src/DurableTasksLab.Client/DurableTasksLab.Client.csproj)
 * [DurableTasksLab.Common](./src/DurableTasksLab.Common/DurableTasksLab.Common.csproj)
 
-The premise behind the lab is that the `DurableTasksLab.Service` contains the hosting setup to be able to listen to messages sent to a target `Azure Service Bus Topic Subscription`, which will in turn invoke Durable Task Orchestrations as prescribed by the message (please see [IDurableTasksMessageHandler](./src/DurableTasksLab.Common/Subscriber/IDurableTasksMessageHandler.cs)).
+The premise behind the lab is that the `DurableTasksLab.ListenerService` and the `DurableTasksLab.Service`projects contain the hosting setup to be able to listen to messages sent to a target `Azure Service Bus Topic Subscription`, which will in turn invoke Durable Task Orchestrations as prescribed by the message (please see [IDurableTasksMessageHandler](./src/DurableTasksLab.Common/Subscriber/IDurableTasksMessageHandler.cs)).
 
-The `DurableTasksLab.Client` is a simple console application that will send messages to a target `Azure Service Bus Topic`.
+The `DurableTasksLab.ListenerService` will messages from the Azure Service bus Topic and invoke the DTFx orcehstrations to execute, followed by a messaging pipeline designed to monitor the status of the execution and report them to Azure App Insights.
 
-The lab comes bundled with a simple [Orchestration and Activity](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
+The `DurableTasksLab.Client` is a simple console application that will send messages to a target `Azure Service Bus Topic`. The client is currently designed to send a batch of messages onto the service bus topic queue, with each message in the batch given a Batch ID (guid) prefix followed by its index position (int) in the batch of generated messages in the format `<BATCH-ID-GUID>-<MESSAGE-BATCH-INDEX-INT>`. This message ID also forms the `InstanceId` of each invoked DTFx orchestration. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations.
+
+The lab comes bundled with a simple [Orchestration and Activities](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
 
 > Note: The orchestrations will need to be registered within the [MyDurableTasksWorkerService](./src/DurableTasksLab.Common/Subscriber/MyDurableTasksWorkerService.cs).
 
 To Run the solution locally:
 
 1. Run the [DurableTasksLab.Service](./src/DurableTasksLab.Service/DurableTasksLab.Service.csproj) to bring up the hosting for the durable tasks.
+1. Run the [DurableTasksLab.ListenerService](./src/DurableTasksLab.ListenerService/DurableTasksLab.ListenerService.csproj) to allow starting and monitoring DTFx orchestrations.
 1. Invoke the [DurableTasksLab.Client](./src/DurableTasksLab.Client/DurableTasksLab.Client.csproj) - This will send a message to the target `Azure Service Bus Topic` which will in turn invoke the target orchestration on the Service Host. 
 
 ## App Insights Queries
+
+The following KQL queries can be used to mine Custom Events that will be logged to Azure App Insights.
 
 For all `orchestration` Custom metrics use the following query:
 
