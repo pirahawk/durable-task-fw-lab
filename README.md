@@ -62,7 +62,7 @@ The `DurableTasksLab.Client` is a simple console application that will send mess
 
 This message ID also forms the `InstanceId` of each invoked DTFx orchestration by the `DurableTasksLab.ListenerService`. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations. Custom Event Telemetry logged to Azure App Insights will also display this information as part of its Custom Dimensions for each Telemetry item.
 
-The lab comes bundled with a simple [Orchestration and Activities](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
+The lab comes bundled with a simple [Orchestration and some Activities](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
 
 > Note: The orchestrations will need to be registered within the [MyDurableTasksWorkerService](./src/DurableTasksLab.Common/Subscriber/MyDurableTasksWorkerService.cs).
 
