@@ -1,3 +1,4 @@
+using Azure.Identity;
 using DurableTask.AzureStorage;
 using DurableTask.Core;
 using Microsoft;
@@ -10,14 +11,18 @@ public static class DurableTaskFactory
     public static async Task<AzureStorageOrchestrationService> CreateOrchestrationService(IConfiguration configuration)
     {
         var storageConnectionString = configuration["Storage:Connection"];
+        var storageName = configuration["Storage:Name"];
         var taskHubName = configuration["DurableTasks:taskHubName"];
 
+        Assumes.NotNullOrEmpty(storageName);
         Assumes.NotNullOrEmpty(storageConnectionString);
         Assumes.NotNullOrEmpty(taskHubName);
 
+        var azCredential = new DefaultAzureCredential();
+
         var settings = new AzureStorageOrchestrationServiceSettings
         {
-            StorageAccountClientProvider = new StorageAccountClientProvider(storageConnectionString),
+            StorageAccountClientProvider = new StorageAccountClientProvider(storageName, azCredential),
             TaskHubName = taskHubName,
         };
         var orchestrationServiceAndClient = new AzureStorageOrchestrationService(settings);

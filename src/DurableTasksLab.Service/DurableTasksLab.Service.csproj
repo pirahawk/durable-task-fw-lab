@@ -5,15 +5,21 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>43061817-f379-4388-b602-fa44259b87a2</UserSecretsId>
+	  <AllowTaskHubClient>true</AllowTaskHubClient>
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(AllowTaskHubClient)' == 'true'">
+		<DefineConstants>$(DefineConstants);AllowTaskHubClient</DefineConstants>
+	</PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Microsoft.Azure.DurableTask.AzureStorage" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.DurableTask.AzureStorage" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.DurableTask.Core" Version="3.0.0" />
   </ItemGroup>
 

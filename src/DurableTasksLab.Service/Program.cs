@@ -12,10 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHostedService<MyDurableTasksTopicSubscriberService>();
+
 builder.Services.AddHostedService<MyDurableTasksWorkerService>();
 builder.Services.AddSingleton<IDurableTasksMessageHandler, MyDurableTasksMessageHandler>();
-
 
 builder.Services.AddTransient<AzureStorageOrchestrationService>((serviceProvider) =>
 {
@@ -26,12 +25,16 @@ builder.Services.AddTransient<AzureStorageOrchestrationService>((serviceProvider
     return createTask.Result;
 });
 
+#if AllowTaskHubClient
+
 builder.Services.AddTransient<TaskHubClient>((serviceProvider) =>
 {
     var storageOrchestrationService = serviceProvider.GetService<AzureStorageOrchestrationService>();
     Assumes.NotNull(storageOrchestrationService);
     return DurableTaskFactory.CreateTaskHubClient(storageOrchestrationService);
 });
+
+#endif
 
 builder.Services.AddTransient<TaskHubWorker>((serviceProvider) =>
 {
@@ -58,7 +61,10 @@ builder.Services.AddHostBuildingNameVersionObjectManager<TaskOrchestration>();
 builder.Services.AddHostBuildingNameVersionObjectManager<TaskActivity>();
 
 builder.Services.AddActivity<SimpleTaskOne>();
+builder.Services.AddActivity<TrackPerformanceTask>();
 builder.Services.AddOrchestration<SimpleOrchestration>();
+
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 

@@ -3,19 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.Client", "DurableTasksLab.Client\DurableTasksLab.Client.csproj", "{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableTasksLab.Client", "DurableTasksLab.Client\DurableTasksLab.Client.csproj", "{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.Service", "DurableTasksLab.Service\DurableTasksLab.Service.csproj", "{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableTasksLab.Service", "DurableTasksLab.Service\DurableTasksLab.Service.csproj", "{C9FCFA15-A526-454B-8B2C-2CDC5D0996C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.Common", "DurableTasksLab.Common\DurableTasksLab.Common.csproj", "{A763B88A-E3CA-4696-96E6-B98B60EB908D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableTasksLab.Common", "DurableTasksLab.Common\DurableTasksLab.Common.csproj", "{A763B88A-E3CA-4696-96E6-B98B60EB908D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableTasksLab.ListenerService", "DurableTasksLab.ListenerService\DurableTasksLab.ListenerService.csproj", "{DEC328A3-025B-4CAC-AF1D-F966319A199F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3E2F6A2F-E102-4516-B0A8-6487FCD54D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,12 @@ Global
 		{A763B88A-E3CA-4696-96E6-B98B60EB908D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A763B88A-E3CA-4696-96E6-B98B60EB908D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A763B88A-E3CA-4696-96E6-B98B60EB908D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC328A3-025B-4CAC-AF1D-F966319A199F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC328A3-025B-4CAC-AF1D-F966319A199F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC328A3-025B-4CAC-AF1D-F966319A199F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC328A3-025B-4CAC-AF1D-F966319A199F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
