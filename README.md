@@ -60,7 +60,7 @@ The `DurableTasksLab.ListenerService` will pull messages from the Azure Service 
 
 The `DurableTasksLab.Client` is a simple console application that will send messages to a target `Azure Service Bus Topic`. The client is currently designed to send a batch of messages onto the service bus topic queue, with each message in the batch given a Batch ID (guid) prefix followed by its index position (int) in the batch of generated messages in the format `<BATCH-ID-GUID>-<MESSAGE-BATCH-INDEX-INT>`. 
 
-This message ID also forms the `InstanceId` of each invoked DTFx orchestration. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations by the `DurableTasksLab.ListenerService`. Custom Event Telemetry logged to Azure App Insights will also display this information as part of its Custom Dimensions for each Telemetry item.
+This message ID also forms the `InstanceId` of each invoked DTFx orchestration by the `DurableTasksLab.ListenerService`. Use this to target and monitor all messages in any given scheduled batch of DTFx orchestrations. Custom Event Telemetry logged to Azure App Insights will also display this information as part of its Custom Dimensions for each Telemetry item.
 
 The lab comes bundled with a simple [Orchestration and Activities](./src/DurableTasksLab.Common/DTfx/Orchestrations/). Please feel free to extend and experiment with these as required. (I may add some more later - watch this space)
 
